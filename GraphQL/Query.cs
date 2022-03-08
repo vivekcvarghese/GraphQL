@@ -1,12 +1,14 @@
 using System.Linq;
 using HotChocolate;
+using HotChocolate.Data;
 using SampleGQL.Data;
 using SampleGQL.Models;
 
 namespace SampleGQL.GraphQL
 {
     public class Query{
-        public IQueryable<Student> GetStudents([Service] AppDbContext context)
+        [UseDbContext(typeof(AppDbContext))]
+        public IQueryable<Student> GetStudents([ScopedService] AppDbContext context)
         {
             return context.Students;
         }
