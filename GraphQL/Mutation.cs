@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 using HotChocolate;
 using HotChocolate.Data;
@@ -10,7 +12,7 @@ namespace SampleGQL.GraphQL{
     public class Mutation{
         
         [UseDbContext(typeof(AppDbContext))]
-        public async Task<AddStudentDetail> AddStudentAsync(AddStudentInput input,
+        public async Task<StudentDetail> AddStudentAsync(AddStudentInput input,
             [ScopedService] AppDbContext context){
 
                 var student = new Student{
@@ -22,7 +24,37 @@ namespace SampleGQL.GraphQL{
                 await context.SaveChangesAsync();
 
 
-                return new AddStudentDetail(student);
+                return new StudentDetail(student);
             }
+
+         
+        [UseDbContext(typeof(AppDbContext))]
+        public async Task<StudentDetail> EditStudentAsync(EditStudentInput input,
+            [ScopedService] AppDbContext context){
+
+                    var student = context.Students.First(i => i.Id == input.Id);
+                    student.Course = input.Course;
+                    student.Name = input.Name;
+
+                    await context.SaveChangesAsync();
+
+                    return new StudentDetail(student);
+
+            }
+
+        [UseDbContext(typeof(AppDbContext))]
+        public async Task<StudentDetail> DeleteStudentAsync(DeleteStudentInput input,
+            [ScopedService] AppDbContext context){
+
+                    var student = context.Students.First(i => i.Id == input.Id);
+                    context.Students.Remove(student);
+                    await context.SaveChangesAsync();
+
+                    return new StudentDetail(student);
+
+            }
+
+        
+
     }
 }

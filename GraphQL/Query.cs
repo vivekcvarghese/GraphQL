@@ -13,9 +13,6 @@ namespace SampleGQL.GraphQL
             return context.Students;
         }
 
-        // public IQueryable<Student> Custom([Service] AppDbContext context)
-        // {
-        //     return null;
-        // }
+      
     }
 }
